@@ -3,6 +3,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Validation {
+    // checking if the entered password equals the password from the costumer
     protected static Boolean checkPassword(String password){
         Scanner input = new Scanner(System.in);
         System.out.println("Enter your Password:");
@@ -10,17 +11,37 @@ public class Validation {
         return password.equals(n);
     }
 
+    //checking if the costumer has enough money for withdrawal or transfer
     protected static Boolean checkForEnoughAmount(int amount, int n) {
         return amount > n;
     }
 
-    protected static int validateAccountNumber() {
+    // validate if the entered last or first name is a name and not a number
+    protected static String validateName(String type) {
+        String regex = "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$";
+        Pattern pat = Pattern.compile(regex);
+        String name;
+        boolean valid = true;
         Scanner input = new Scanner(System.in);
+        do{
+            if(!valid){
+                System.out.println("This can't be a name");
+            }
+            System.out.println("Enter your " + type);
+            name = input.next();
+            Matcher mat = pat.matcher(name);
+            valid = mat.matches();
+        } while(!valid);
+        return name;
+    }
+
+    // validating if the entered account number is a 3 digital number and not used by a other costumer
+    protected static int validateAccountNumber() {
         int accountNumber;
         Boolean doubleUse;
         do{
             System.out.println("Enter a valid 3 digital Account Number you would like to have:");
-            accountNumber = input.nextInt();
+            accountNumber = Validation.enterInt();
             if(BankCostumer.numbers.contains(accountNumber)){
                 System.out.println("The number you wanted exists already");
                 doubleUse = true;
@@ -31,6 +52,7 @@ public class Validation {
         return accountNumber;
     }
 
+    // validating password to the outpointed requirements
     protected static String validatePassword() {
         final String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
         System.out.println(
@@ -54,5 +76,23 @@ public class Validation {
         } while(!valid);
 
         return password;
+    }
+
+    // handling the exception when entering a String or Character instead of an Integer
+    protected static int enterInt() {
+        Scanner input = new Scanner(System.in);
+        int number = 0;
+        boolean valid = true;
+        do {
+            try{
+                number = input.nextInt();
+                valid = false;
+            } catch(Exception e) {
+                input.next();
+                System.out.println("The input must be of type Integers!");
+            }
+        } while(valid);
+
+        return number;
     }
 }

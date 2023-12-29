@@ -1,5 +1,3 @@
-// doppelte account numbers
-
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Main {
@@ -8,12 +6,11 @@ public class Main {
         int n;
         boolean repeat = true;
         ArrayList<BankCostumer> costumers = new ArrayList<BankCostumer>();
-
         // as long as the user wants to do something this loop is running
         do {
             System.out.println("If you want to perform an action press 1 otherwise press 2");
             do {
-                n = input.nextInt();
+                n = Validation.enterInt();
             } while (n < 1 || n > 2);
             System.out.println(n);
 
@@ -26,14 +23,15 @@ public class Main {
                 System.out.println("Press 5 if you want to see your account balance");
                 int m;
                 do {
-                    m = input.nextInt();
+                    m = Validation.enterInt();
                 } while (m < 1 || m > 5);
                 System.out.println(n);
                 switch (m) {
-                    case 1:
+                    case 1: // creating new Costumer
                         costumers.add(CostumerCreator.createAccount());
                         break;
-                    case 2:
+                    case 2: // withdrawal money
+                        // getting right costumer with the entered account number and withdrawal money
                         int accountNumber2 = enterAccountNumber();
                         BankCostumer c1 = null;
                         for(BankCostumer i : costumers) {
@@ -51,7 +49,8 @@ public class Main {
                             System.out.println(e);
                         }
                         break;
-                    case 3:
+                    case 3: // deposit money
+                        // getting the right costumer with the entered account number and depositing to his balance
                         int accountNumber3 = enterAccountNumber();
                         for(BankCostumer i : costumers) {
                             try {
@@ -66,7 +65,8 @@ public class Main {
                             }
                         }
                         break;
-                    case 4:
+                    case 4: // transfer money
+                        // getting the two Costumers with the entered account numbers
                         int accountNumber4 = enterAccountNumber();
                         BankCostumer c2 = null;
                         BankCostumer c3 = null;
@@ -94,12 +94,13 @@ public class Main {
                             System.out.println(e);
                         }
                         break;
-                    case 5:
+                    case 5: // get current balance
+                        // getting the right costumer with the entered account number and returning balance
                         int accountNumber5 = enterAccountNumber();
                         for(BankCostumer i : costumers) {
                             try {
                                 if (i.getAccountNumber() == accountNumber5) {
-                                    System.out.println(i.getAmount());
+                                    i.checkBalance();
                                     break;
                                 } else {
                                     System.out.println("The account number doesn't exist, you have to create an new account!");
@@ -121,7 +122,7 @@ public class Main {
     public static int enterAccountNumber() {
         Scanner input = new Scanner(System.in);
         System.out.println("Enter account number:");
-        int accountNumber = input.nextInt();
+        int accountNumber = Validation.enterInt();
         if(accountNumber < 100 || accountNumber > 1000) {
             throw new IllegalArgumentException ("Account number must be a 3 digit number!");
         } else {

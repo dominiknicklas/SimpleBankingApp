@@ -1,7 +1,5 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 
-// not enough amount exception and wrong password exeption
 public class BankCostumer {
     private String firstName;
     private String lastName;
@@ -50,19 +48,17 @@ public class BankCostumer {
         this.password = password;
     }
 
-    public int getAmount() {
-        return amount;
-    }
+    public int getAmount() {return amount;}
 
-    public void setAmount(int amount) {
+    private void setAmount(int amount) {
         this.amount = amount;
     }
 
+    // methode to withdrawal money
     public void withdrawal() throws NotEnoughAmountException, WrongPasswordException {
-        Scanner input = new Scanner(System.in);
         if(Validation.checkPassword(this.password)) {
             System.out.println("Enter the amount of money you want to withdrawal:");
-            int n = input.nextInt();
+            int n = Validation.enterInt();
 
             if(Validation.checkForEnoughAmount(this.amount, n)) {
                 setAmount(getAmount() - n);
@@ -71,26 +67,32 @@ public class BankCostumer {
         } else {throw new WrongPasswordException("You have entered a wrong password!");}
     }
 
+    // methode to deposit money
     public void deposit() throws WrongPasswordException {
-        Scanner input = new Scanner(System.in);
         if(Validation.checkPassword(this.password)) {
             System.out.println("Enter the amount of money you want to deposit:");
-            int n = input.nextInt();
+            int n = Validation.enterInt();
             setAmount(getAmount() + n);
             System.out.println("Deposit done new amount: " + this.getAmount());
         } else {throw new WrongPasswordException("You have entered a wrong password!");}
     }
 
+    // methode to transfer money to an other bank costumer
     public void transfer(BankCostumer other) throws NotEnoughAmountException, WrongPasswordException {
         if(Validation.checkPassword(this.password)) {
             System.out.println("Enter amount you want to transfer to: " + other.getAccountNumber());
-            Scanner input = new Scanner(System.in);
-            int tAmount = input.nextInt();
+            int tAmount = Validation.enterInt();
             if(Validation.checkForEnoughAmount(this.amount, tAmount)) {
                 this.setAmount(this.getAmount() - tAmount);
                 other.setAmount(other.getAmount() + tAmount);
                 System.out.println("Transfer successful your new amount: " + this.getAmount());
             } else {throw new NotEnoughAmountException("You don't have enough credit to transfer the amount!");}
         } else {throw new WrongPasswordException("You have entered a wrong password!");}
+    }
+
+    public void checkBalance() throws WrongPasswordException {
+        if(Validation.checkPassword(this.password)) {
+            System.out.println(this.getAmount());
+        } else {throw new WrongPasswordException("You have entered a wrong password!");        }
     }
 }
